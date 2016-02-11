@@ -19,7 +19,7 @@ public class EncodingContainerProfile extends EncodingProfile {
     	this(name, name, format, null);
     }
     
-    boolean add(EncodingProfile profile) {
+    public boolean add(EncodingProfile profile) {
     	return gst.gst_encoding_container_profile_add_profile(this, profile);
     }
 }

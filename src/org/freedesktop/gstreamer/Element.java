@@ -528,6 +528,10 @@ public class Element extends GstObject {
         });
     }
     
+    public void connectA(String signal, GstCallback listener) {
+    	connect(signal, GstCallback.class, listener, listener);
+    }
+    
     /**
      * Remove a listener for the <code>no-more-pads</code> signal
      * 
