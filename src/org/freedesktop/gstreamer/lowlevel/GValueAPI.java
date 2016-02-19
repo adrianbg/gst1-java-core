@@ -218,6 +218,10 @@ public interface GValueAPI extends Library {
         	return g_type.equals(GType.POINTER) ? GVALUE_API.g_value_get_pointer(this) : null;
         }
         
+        public Pointer toBoxed() {
+        	return GVALUE_API.g_value_get_boxed(this);
+        }
+        
         public String toString() {
         	return GVALUE_API.g_strdup_value_contents(this);
         }

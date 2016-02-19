@@ -659,6 +659,22 @@ public class Bus extends GstObject {
         });
     }
     
+    
+    /**
+     * Add a listener for messages of type {@code signal} posted on the Bus.
+     * 
+     * @param signal the signal to connect to.
+     * @param listener The listener to be called when a {@link Message} is posted.
+     */
+    public void connectA(String signal, final MESSAGE listener) {
+        connect(signal, MESSAGE.class, listener, new BusCallback() {
+            public boolean callback(Bus bus, Message msg, Pointer user_data) {
+                listener.busMessage(bus, msg);
+                return true;
+            }
+        });
+    }
+    
     /**
      * Disconnect the listener for segment-done messages.
      * 
@@ -752,7 +768,7 @@ public class Bus extends GstObject {
             return;
         }
         MessageType type = MessageType.forName(signal);
-        if (type == MessageType.UNKNOWN && "message".equals(signal)) {
+        if (type == MessageType.UNKNOWN && signal.startsWith("message")) {
             type = MessageType.ANY;
         }
         if (type == MessageType.UNKNOWN) {
