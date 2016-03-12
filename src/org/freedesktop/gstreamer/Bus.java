@@ -787,6 +787,11 @@ public class Bus extends GstObject {
         addWatch();
     }
     
+    public synchronized <T> void connectA(String signal, Class<T> listenerClass, T listener,
+            final Callback callback) {
+    	super.connect(signal, listenerClass, listener, callback);
+    }
+    
     @Override
     public synchronized <T> void disconnect(Class<T> listenerClass, T listener) {
         if (listenerClass.getEnclosingClass() != Bus.class) {

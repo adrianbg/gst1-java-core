@@ -63,7 +63,7 @@ import com.sun.jna.ptr.PointerByReference;
  * This is an abstract class providing some GObject-like facilities in a common 
  * base class.  Not intended for direct use.
  */
-public abstract class GObject extends RefCountedObject {
+public class GObject extends RefCountedObject {
     private static final Logger logger = Logger.getLogger(GObject.class.getName());
     private static final Level LIFECYCLE = Level.FINE;
     
@@ -73,8 +73,12 @@ public abstract class GObject extends RefCountedObject {
     private Map<String, Map<Closure, ClosureProxy>> signalClosures;
     
     private final IntPtr objectID = new IntPtr(System.identityHashCode(this));
+    
+    public GObject() {
+    	this(initializer(GOBJECT_API.g_object_new(GType.OBJECT, null)));
+    }
 
-    public GObject(Initializer init) { 
+    public GObject(Initializer init) {
         super(init.needRef ? initializer(init.ptr, false, init.ownsHandle) : init);
         logger.entering("GObject", "<init>", new Object[] { init });
         if (init.ownsHandle) {
@@ -579,6 +583,13 @@ public abstract class GObject extends RefCountedObject {
     public synchronized <T> void connect(String signal, Class<T> listenerClass, T listener, Callback cb) {
         Native.setCallbackThreadInitializer(cb, cbi);
         addCallback(listenerClass, listener, new SignalCallback(signal, cb));
+    }
+    
+    public synchronized SignalCallback lessStupidConnect(String signal, Callback cb) {
+    	Native.setCallbackThreadInitializer(cb, cbi);
+    	SignalCallback s = new SignalCallback(signal, cb);
+    	addCallback(SignalCallback.class, s, s); // why did they design it this way?
+    	return s;
     }
     
     public synchronized <T> void disconnect(Class<T> listenerClass, T listener) {

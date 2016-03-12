@@ -75,6 +75,7 @@ public interface GstMessageAPI extends com.sun.jna.Library {
     
     GType gst_message_get_type();
     String gst_message_type_get_name(MessageType type);
+    boolean gst_message_has_name(Message msg, String name);
     void gst_message_parse_state_changed(Message msg, State[] old, State[] current, State[] pending);
     void gst_message_parse_tag(Message msg, PointerByReference tagList);
     void gst_message_parse_clock_provide(Message msg, PointerByReference clock, int[] reader);

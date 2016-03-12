@@ -94,6 +94,10 @@ public class Message extends MiniObject {
 		return type;
     }
     
+    public boolean hasName(String name) {
+    	return gst.gst_message_has_name(this, name);
+    }
+    
     /**
      * Gets a writable version of this Message.
      * 
